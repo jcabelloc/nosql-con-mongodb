@@ -2,12 +2,13 @@ const path = require('path');
 
 const express = require('express');
 
-const tiendaController = require('../controllers/tienda');
+// const tiendaController = require('../controllers/tienda');
 
 
 const router = express.Router();
 
 // GET requiere una coincidencia exacta en la ruta
+/*
 router.get('/', tiendaController.getIndex);
 
 router.get('/productos', tiendaController.getProductos);
@@ -24,6 +25,6 @@ router.get('/pedidos', tiendaController.getPedidos);
 
 router.post('/crear-pedido', tiendaController.postPedido);
 
-router.get('/checkout', tiendaController.getCheckout);
+router.get('/checkout', tiendaController.getCheckout); */
 
 module.exports = router;
