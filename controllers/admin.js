@@ -25,17 +25,15 @@ exports.postCrearProducto = (req, res, next) => {
       console.log(err);
     });
 };
-/*
+
 exports.getEditarProducto = (req, res, next) => {
   const modoEdicion = req.query.editar;
   if (!modoEdicion) {
     return res.redirect('/');
   }
   const idProducto = req.params.idProducto;
-  req.usuario
-    .getProductos({ where: { id: idProducto } })
-    .then(productos => {
-      const producto = productos[0];
+  Producto.findById(idProducto)
+    .then(producto => {
       if (!producto) {
         return res.redirect('/');
       }
@@ -49,26 +47,29 @@ exports.getEditarProducto = (req, res, next) => {
   .catch(err => console.log(err));
 };
 
+
 exports.postEditarProducto = (req, res, next) => {
   const idProducto = req.body.idProducto;
   const nombre = req.body.nombre;
   const precio = req.body.precio;
   const urlImagen = req.body.urlImagen;
   const descripcion = req.body.descripcion;
-  Producto.findByPk(idProducto)
-    .then(producto => {
-      producto.nombre = nombre;
-      producto.precio = precio;
-      producto.descripcion = descripcion;
-      producto.urlImagen = urlImagen;
-      return producto.save();
-    })
+
+  const producto = new Producto(
+    nombre,
+    precio,
+    descripcion,
+    urlImagen,
+    idProducto
+  );
+
+  producto.save()
     .then(result => {
-      console.log('PRODUCTO ACTUALIZADO!');
+      console.log('PRODUCTO GUARDADO!');
       res.redirect('/admin/productos');
     })
     .catch(err => console.log(err));
-}; */
+}; 
 
 exports.getProductos = (req, res, next) => {
   Producto
@@ -83,16 +84,13 @@ exports.getProductos = (req, res, next) => {
     .catch(err => console.log(err));
     };
 
-/*
+
 exports.postEliminarProducto = (req, res, next) => {
   const idProducto = req.body.idProducto;
-  Producto.findByPk(idProducto)
-    .then(producto => {
-      return producto.destroy();
-    })
-    .then(result => {
+  Producto.deleteById(idProducto)
+    .then(() => {
       console.log('PRODUCTO ELIMINADO');
       res.redirect('/admin/productos');
     })
     .catch(err => console.log(err));
-}; */
+}; 
