@@ -8,6 +8,8 @@ const bodyParser = require('body-parser')
 
 const errorController = require('./controllers/error');
 const mongoConnect = require('./utils/database').mongoConnect;
+const Usuario = require('./models/usuario');
+
 
 const adminRoutes = require('./routes/admin');
 const tiendaRoutes = require('./routes/tienda');
@@ -21,14 +23,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(raizDir, 'public')));
 
 app.use((req, res, next) => {
-  /*
-  Usuario.findByPk(1)
+  // Crear un usuario manualmente en MongoAtlas
+  Usuario.findById('66e75f6aa5ead9c7ab302d8c')
     .then(usuario => {
       req.usuario = usuario;
       next();
     })
-    .catch(err => console.log(err));*/
-  next();
+    .catch(err => console.log(err));
 });
 
 app.use('/admin', adminRoutes);
