@@ -13,23 +13,19 @@ exports.postCrearProducto = (req, res, next) => {
   const urlImagen = req.body.urlImagen;
   const precio = req.body.precio;
   const descripcion = req.body.descripcion;
-  req.usuario
-    .createProducto({
-      nombre: nombre,
-      precio: precio,
-      urlImagen: urlImagen,
-      descripcion: descripcion
-    })
+  const producto = new Producto(nombre, precio, descripcion, urlImagen);
+  producto
+    .save()
     .then(result => {
       // console.log(result);
-      console.log('Producto Creado!!!');
-      res.redirect('/');
+      console.log('Producto Creado');
+      res.redirect('/admin/productos');
     })
     .catch(err => {
       console.log(err);
     });
 };
-
+/*
 exports.getEditarProducto = (req, res, next) => {
   const modoEdicion = req.query.editar;
   if (!modoEdicion) {
@@ -72,11 +68,11 @@ exports.postEditarProducto = (req, res, next) => {
       res.redirect('/admin/productos');
     })
     .catch(err => console.log(err));
-};
+}; */
 
 exports.getProductos = (req, res, next) => {
-  req.usuario
-    .getProductos()
+  Producto
+    .fetchAll()
     .then(productos => {
       res.render('admin/productos', {
         prods: productos,
@@ -87,6 +83,7 @@ exports.getProductos = (req, res, next) => {
     .catch(err => console.log(err));
     };
 
+/*
 exports.postEliminarProducto = (req, res, next) => {
   const idProducto = req.body.idProducto;
   Producto.findByPk(idProducto)
@@ -98,4 +95,4 @@ exports.postEliminarProducto = (req, res, next) => {
       res.redirect('/admin/productos');
     })
     .catch(err => console.log(err));
-};
+}; */
