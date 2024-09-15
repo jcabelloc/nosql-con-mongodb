@@ -42,73 +42,39 @@ exports.getIndex = (req, res, next) => {
   });
 };
 
-/*
 exports.getCarrito = (req, res, next) => {
   req.usuario
     .getCarrito()
-    .then(carrito => {
-      return carrito
-        .getProductos()
-        .then(productos => {
-          res.render('tienda/carrito', {
-            path: '/carrito',
-            titulo: 'Mi Carrito',
-            productos: productos
-          });
-        })
-        .catch(err => console.log(err));
-    })
-    .catch(err => console.log(err));
+      .then(productos => {
+        res.render('tienda/carrito', {
+          path: '/carrito',
+          titulo: 'Mi Carrito',
+          productos: productos
+        });
+      })
+      .catch(err => console.log(err));
 };
 
 exports.postCarrito = (req, res, next) => {
   const idProducto = req.body.idProducto;
-  let micarrito;
-  let nuevaCantidad = 1;
-  req.usuario
-    .getCarrito()
-    .then(carrito => {
-      micarrito = carrito;
-      return carrito.getProductos({ where: { id: idProducto } });
-    })
-    .then(productos => {
-      let producto;
-      if (productos.length > 0) {
-        producto = productos[0];
-      }
-
-      if (producto) {
-        nuevaCantidad = producto.carritoItem.cantidad + 1;
-        return producto;
-      }
-      return Producto.findByPk(idProducto);
-    })
+  Producto.findById(idProducto)
     .then(producto => {
-      return micarrito.addProducto(producto, {
-        through: { cantidad: nuevaCantidad }
-      });
+      return req.usuario.agregarAlCarrito(producto);
     })
-    .then(() => {
+    .then(result => {
+      console.log(result);
       res.redirect('/carrito');
-    })
-    .catch(err => console.log(err));
+    });
 };
 
 exports.postEliminarProductoCarrito = (req, res, next) => {
   const idProducto = req.body.idProducto;
   req.usuario
-    .getCarrito()
-    .then(carrito => {
-      return carrito.getProductos({ where: { id: idProducto } });
-    })
-    .then(productos => {
-      const producto = productos[0];
-      return producto.carritoItem.destroy();
-    })
-    .then(result => {
-      res.redirect('/carrito');
-    })
-    .catch(err => console.log(err));
+    .deleteItemDelCarrito(idProducto)
+      .then(result => {
+        res.redirect('/carrito');
+      })
+      .catch(err => console.log(err));
 };
 
 exports.postPedido = (req, res, next) => {
@@ -159,5 +125,5 @@ exports.getCheckout = (req, res, next) => {
     path: '/checkout',
     titulo: 'Checkout'
   });
-}; */
+}; 
 
