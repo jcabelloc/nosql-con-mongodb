@@ -81,6 +81,38 @@ class Usuario {
       );
   }
 
+  agregarPedido() {
+    const db = getDb();
+    return this.getCarrito()
+      .then(productos => {
+        const pedido = {
+          items: productos,
+          usuario: {
+            _id: this._id,
+            nombre: this.nombre
+          }
+        };
+        return db.collection('pedidos').insertOne(pedido);
+      })
+      .then(result => {
+        this.carrito = { items: [] };
+        return db
+          .collection('usuarios')
+          .updateOne(
+            { _id: this._id },
+            { $set: { carrito: { items: [] } } }
+          );
+      });
+  }
+
+  getPedidos() {
+    const db = getDb();
+    return db
+      .collection('pedidos')
+      .find({ 'usuario._id': this._id })
+      .toArray();
+  }
+
   static findById(idUsuario) {
     const db = getDb();
     return db
